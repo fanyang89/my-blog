@@ -45,10 +45,18 @@ export default hopeTheme({
   plugins: {
     blog: true,
 
-    // comment: {
-    //   provider: "Waline",
-    //   serverURL: "https://waline-comment.vuejs.press",
-    // },
+    comment: {
+      provider: "Giscus",
+      repo: "fanyang89/my-blog",
+      repoId: "R_kgDOMmVl5w",
+      category: "Announcements",
+      categoryId: "DIC_kwDOMmVl584Ch5MD",
+      mapping: "pathname",
+      strict: false,
+      reactionsEnabled: true,
+      inputPosition: "top",
+      lazyLoading: true,
+    },
 
     components: {
       components: ["Badge", "VPCard"],
