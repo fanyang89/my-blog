@@ -39,7 +39,7 @@ export default hopeTheme({
 
   // disable by default
   // https://theme-hope.vuejs.press/zh/guide/blog/intro.html#%E9%99%90%E5%88%B6
-  hotReload: false,
+  hotReload: true,
 
   plugins: {
     blog: true,
