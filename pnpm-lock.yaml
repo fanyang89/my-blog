@@ -7,10 +7,6 @@ settings:
 importers:
 
   .:
-    dependencies:
-      mermaid:
-        specifier: ^11.0.1
-        version: 11.0.1
     devDependencies:
       '@vuepress/bundler-vite':
         specifier: 2.0.0-rc.14
@@ -27,6 +23,9 @@ importers:
       mathjax-full:
         specifier: ^3.2.2
         version: 3.2.2
+      mermaid:
+        specifier: ^11.0.1
+        version: 11.0.1
       vue:
         specifier: ^3.4.31
         version: 3.4.38
