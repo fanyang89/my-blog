@@ -10,6 +10,8 @@ tag:
 
 # PolarFS: An Ultra-low Latency and Failure Resilient Distributed File System for Shared Storage Cloud Database
 
+[PolarFS: An Ultra-low Latency and Failure Resilient Distributed File System for Shared Storage Cloud Database](https://www.vldb.org/pvldb/vol11/p1849-cao.pdf)
+
 <a href="/html/polarfs/polarfs.html" target="_blank">点击这里打开 PPT</a>
 
 ## 综述

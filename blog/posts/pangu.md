@@ -2,11 +2,13 @@
 date: 2024-08-24 17:00:00
 category:
   - storage
+tag:
+  - pangu
 ---
 
-# FAST'23 阿里盘古性能导向的演进
+# 阿里盘古性能导向的演进
 
-[原文](https://www.usenix.org/conference/fast23/presentation/li-qiang-deployed)
+[More Than Capacity: Performance-oriented Evolution of Pangu in Alibaba](https://www.usenix.org/conference/fast23/presentation/li-qiang-deployed)
 
 # 摘要
 

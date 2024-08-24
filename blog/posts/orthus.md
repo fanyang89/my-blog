@@ -6,18 +6,20 @@ category:
 
 # Optimizing Caching on Modern Storage Devices with Orthus
 
-# 概述
+[The Storage Hierarchy is Not a Hierarchy: Optimizing Caching on Modern Storage Devices with Orthus](https://www.usenix.org/system/files/fast21-wu-kan.pdf)
+
+## 概述
 
 本文介绍了非层次缓存（NHC，non-hierarchical caching），现代存储层次结构中的一种新式缓存方法。与传统缓存相比，NHC 通过将过载重定向到层次结构中较低的设备（如果这么做有好处）来提高性能。
 NHC 动态调整分配和访问策略，以最大限度提高性能（如高吞吐，较低的 99% 延迟）。
 我们在 Orthus-CAS（块层 cache 内核模块，基于 OpenCAS）和 Orthus-KV（用户态 kv 缓存层，基于 Wisckey）中实现了 NHC。我们通过深入的实证研究展示了 NHC 的性能：在一系列实际的工作负载下，Orthus-CAS 和 Orthus-KV 在各种现代层次结构上提供显著的更好性能（高达两倍）。
 
-# 场景
+## 场景
 
 这种高命中率和高负载在生产缓存系统中很常见。
 例如，Twitter 最近的一项研究表明，十个 [Twemcache][twemcache] 集群中有八个的未命中率低于 5%。 研究还表明，缓存层经常承受重负载（即，它们是带宽饱和的）。
 
-# 简介
+## 简介
 
 存储层次结构的概念长期以来一直是计算机系统设计的中心。事实上，在广泛使用的教科书上可以找到关于层次结构及其基本性质的假设：快速存储器是昂贵的，所以存储器层次结构被组织为几个级别，每个比下个级别更小、更快、更贵的字节都离处理器更远。
 
@@ -52,9 +54,9 @@ NHC 动态调整分配和访问策略，以最大限度提高性能（如高吞�
 - 它们不适应不断变化的工作负载和并发级别（对于现代设备来说尤为重要）
   我们在两个系统中实现了 NHC：Orthus-CAS 和 Orthus-KV。在负载较低的情况下，Orthus 的行为类似于传统缓存。在其他情况下，他们将缓存层的过重负载卸载到容量层，从而提高了性能。通过严格的评估，在各种实际设备和模拟设备上，Orthus 的实施极大地提高了性能（高达两倍）。
 
-# 动机
+## 动机
 
-## 管理存储分层结构
+### 管理存储分层结构
 
 存储层次结构由下面两部分组成：
 
@@ -70,7 +72,7 @@ NHC 动态调整分配和访问策略，以最大限度提高性能（如高吞�
 分层类似于缓存，在性能设备中维护热数据。然而，与缓存不同的是，访问 $D_{lo}$ 上的数据时，不一定被提升为 $D_{hi}$。数据可以直接从 $D_{lo}$ 中提供。数据仅在较长的时间范围（数小时/数天）内定期迁移，并执行长期优化的数据排布。分层通常以较粗的粒度（如整个卷/较大的 extent）。虽然缓存可以对工作负载的变化做出快速的反应，但是分层无法做到。
 为了最大限度提高性能，缓存和分层都努力确保从高性能设备为大多数的访问提供服务。因此，大部分缓存和分层都旨在最大限度的提高性能设备的命中率。
 
-## 存储硬件演进趋势
+### 存储硬件演进趋势
 
 ![](/images/orthus/1f82d1f615eb35a6b5105776781ebc30.png)
 
@@ -93,7 +95,7 @@ NHC 动态调整分配和访问策略，以最大限度提高性能（如高吞�
 - 与传统的层次结构不同，新的存储层次结构可能不是层次结构，相邻层的（NVM/Optane）的性能可能相似
 - 新设备的性能取决于不同的工作负载和并发级别。
 
-# 传统和现代存储层次结构中的缓存
+## 传统和现代存储层次结构中的缓存
 
 1. 对缓存性能建模
 2. 实证分析，填充模型没有的重要细节
@@ -107,12 +109,12 @@ NHC 动态调整分配和访问策略，以最大限度提高性能（如高吞�
 - 工作负载具有很低并发性（一次一个请求）或者高并发性（一次很多请求）
 - 只有读（简化分析，不需要考虑 cache replacement 中的 dirty write-back）
 
-## 建模
+### 建模
 
 缓存命中率 hit rate：$H \in [0, 1]$
 考虑两个极端：极低的并发和极高的并发
 
-### 每次一个请求
+#### 每次一个请求
 
 每次一个请求，每个请求的平均时间为：
 
@@ -137,7 +139,7 @@ $$
 B_{cache,1}=\frac{1}{T_{cache,1}}=\frac{R_{h i} \cdot R_{l o}}{H \cdot R_{l o}+(1-H) \cdot\left(R_{h i}+R_{l o}\right)}
 $$
 
-### 每次 N 个请求
+#### 每次 N 个请求
 
 命中的请求数：$H \cdot N$
 未命中请求数：$(1-H)\cdot N$
@@ -164,7 +166,7 @@ $$
 B_{\text {cache,many }}=\frac{1}{\max \left(\frac{1-H}{R_{l o}}, \frac{1}{R_{h i}}\right)}
 $$
 
-### 用于对照的 Splitting 策略
+#### 用于对照的 Splitting 策略
 
 Split rate：$S\in[0,1]$，表示 $S$ 份额的请求数由 $D_{hi}$ 服务，$(1-S)$ 份额的请求由 $D_{lo}$ 服务。
 带宽为：
@@ -176,7 +178,7 @@ B_{\text {split,many }}=\frac{1}{\max \left(\frac{1-S}{R_{l o}}, \frac{S}{R_{h i
 \end{array}
 $$
 
-## 解析模型
+### 解析模型
 
 ![](/images/orthus/906f37a27de077acfca38fbf878c653f.png)
 
@@ -193,7 +195,7 @@ $$
 2. 最大化 $D_{hi}$ 响应的请求数并不总是能提供最佳性能。在大量并发的情况下，当大约三分之二的请求指向 $D_{hi}$ 时，Split 实现了 $D_{hi}$ 和 $D_{lo}$ 的聚合带宽。进一步增加分流率只会降低性能。 因此，在现代层次结构中，关键不是最大化命中率或拆分率，而是找到必须发送到每个设备的正确比例的请求。
    图四，对照。
 
-## 真实世界
+### 真实世界
 
 传统层次结构
 
@@ -218,7 +220,7 @@ $$
 2. 读写比例
    [Figure 5](assets/image-20220529163232720.png) 中可以看到，对于 Optane + Flash，读密集型负载的最佳拆分率为 $90\%$，写密集型负载的最佳拆分率是 $60\%$，这是因为 Optane 和 Flash 的写入性能差异小于读取性能差异。NVM+Optane 也存在类似结果。
 
-## 总结和启示
+### 总结和启示
 
 - 经典缓存在现代层次结构中不再有效：它没有利用容量层可以提供的相当大的性能。
 - 在高命中率和高速缓存层负载过重的情况下，一些请求可以卸载到容量设备。
@@ -312,10 +314,7 @@ $step$ 是 load_admit 迭代的 step size，目标是提高 hit rate
 
 - 原因是：轻量的工作负载下，NHC 可以快速切换到传统缓存。高负载下，更高的 hit rate 会让 NHC bypass more hits
 
-# 评估
-
-> With 95% hit ratio and Load-2.0 NHC obtains improvements of 21%, 32% 54% for DRAM+NVM, NVM+Optane, and Optane+Flash, respectively.
-> Such improvements are marginally reduced with an 80% hit ratio.
+## 评估
 
 在 95% hit ratio 和 Load-2.0 的情况下，性能提高：
 
@@ -334,14 +333,15 @@ Hit ratio 为 80% 的情况下，改进幅度略有降低。
 
 ![](/images/orthus/ac03ab4e232b7d6dadf48d6702464456.png)
 
-# 结论
+## 结论
 
 在本文中，我们展示了新兴存储设备如何对现代层次结构中的缓存产生重大影响。
 
 我们引入了非分层缓存，这是一种优化的新方法，可从现代设备中提取峰值性能。NHC 基于一种新颖的缓存调度算法，该算法考虑工作负载和设备特性来做出分配和访问决策。通过实验，我们展示了 NHC 在各种设备、缓存配置和工作负载上的优势。我们相信 NHC 可以作为管理存储层次结构的更好基础。
 
-# 引用
+## 引用
 
 - [高质量存储论文（一）](https://zhuanlan.zhihu.com/p/473438804)
 
-[twemcache]: https://github.com/twitter/twemcache
+[twemcache]: https://github.com/twitter/twemcache	"Twemcache is the Twitter Memcached"
+
