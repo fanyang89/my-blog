@@ -6,7 +6,7 @@ tag:
   - ceph
 ---
 
-# EBOFS
+# EBOFS 简介
 
 介绍 EBOFS 的资料很少，下面是一些可以公开的情报。
 
