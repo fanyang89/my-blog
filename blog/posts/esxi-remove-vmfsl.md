@@ -1,8 +1,9 @@
 ---
-date: 2024-08-24
+date: 2024-08-24 16:50:00
+category:
+  - DevOps
 tag:
   - ESXi
-  - 运维
 ---
 
 # ESXi 7.0 安装时移除 VMFSL

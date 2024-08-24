@@ -1,9 +1,10 @@
 ---
-date: 2024-08-24
+date: 2024-08-24 16:45:00
+category:
+  - test
 tag:
   - linux
   - io
-  - test
 ---
 
 # dm-delay 模拟慢速磁盘
