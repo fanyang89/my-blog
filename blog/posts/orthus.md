@@ -8,11 +8,14 @@ category:
 
 # 概述
 
-本文介绍了非层次缓存（NHC，non-hierarchical caching），现代存储层次结构中的一种新式缓存方法。与传统缓存相比，NHC 通过将过载重定向到层次结构中较低的设备（如果这么做有好处）来提高性能。NHC 动态调整分配和访问策略，以最大限度提高性能（如高吞吐，较低的 99% 延迟）。我们在 Orthus-CAS（块层 cache 内核模块，基于 OpenCAS）和 Orthus-KV（用户态 kv 缓存层，基于 Wisckey）中实现了 NHC。我们通过深入的实证研究展示了 NHC 的性能：在一系列实际的工作负载下，Orthus-CAS 和 Orthus-KV 在各种现代层次结构上提供显著的更好性能（高达两倍）。
+本文介绍了非层次缓存（NHC，non-hierarchical caching），现代存储层次结构中的一种新式缓存方法。与传统缓存相比，NHC 通过将过载重定向到层次结构中较低的设备（如果这么做有好处）来提高性能。
+NHC 动态调整分配和访问策略，以最大限度提高性能（如高吞吐，较低的 99% 延迟）。
+我们在 Orthus-CAS（块层 cache 内核模块，基于 OpenCAS）和 Orthus-KV（用户态 kv 缓存层，基于 Wisckey）中实现了 NHC。我们通过深入的实证研究展示了 NHC 的性能：在一系列实际的工作负载下，Orthus-CAS 和 Orthus-KV 在各种现代层次结构上提供显著的更好性能（高达两倍）。
 
 # 场景
 
-这种高命中率和高负载在生产缓存系统中很常见。 例如，Twitter 最近的一项研究表明，十个 Twemcache 集群中有八个的未命中率低于 5%。 研究还表明，缓存层经常承受重负载（即，它们是带宽饱和的）。
+这种高命中率和高负载在生产缓存系统中很常见。
+例如，Twitter 最近的一项研究表明，十个 [Twemcache][twemcache] 集群中有八个的未命中率低于 5%。 研究还表明，缓存层经常承受重负载（即，它们是带宽饱和的）。
 
 # 简介
 
@@ -33,7 +36,11 @@ category:
 - 容量层：基于 Flash 的固态硬盘
 - 性能层：看起来更快的 Optane
   在某些情况下，Optane 优于 Flash，因此传统的缓存/分层结构运行良好。然而，在其他情况下，比如高并发的工作负载时，设备的性能相似（也就是此时的存储层次结构不是一个层次结构），因此传统的缓存和分层没有利用容量层可用的全部带宽。我们需要一种不同的方法来最大化性能。
-  为了解决这个问题，我们引入了非层次缓存 NHC。这是一种用于现代存储层次结构的新缓存方法。**核心思想：当传统缓存向性能层发送的请求多于有用的请求时，一些额外的负载可以动态地转移到容量层设备。** 这在两个方面对传统缓存进行了改进：
+
+为了解决这个问题，我们引入了非层次缓存 NHC。这是一种用于现代存储层次结构的新缓存方法
+**核心思想：当传统缓存向性能层发送的请求多于有用的请求时，一些额外的负载可以动态地转移到容量层设备。**
+  
+这在两个方面对传统缓存进行了改进：
 
 1. 通过监控性能并调整发送到每个设备的请求，NHC 可以从容量层设备中提供更多可用的性能
 2. 当设备间的数据移动不能提高性能时，NHC 会避免这样的移动
@@ -53,13 +60,13 @@ category:
 - 多个异构存储设备
 - 在这些设备之间传输数据的策略
   为了简单起见，我们假设一个由一个或两个设备组成的层次结构：
-- 性能设备 Dhi
-- 容量设备 Dlo
+- 性能设备 $D_{hi}$
+- 容量设备 $D_{lo}$
   传统上有两种方法用于管理这种层次结构：缓存和分层。
   ![](/images/orthus/6c58def9ab2ce9b4fc81c67a54bdc52e.png)
 
-使用缓存时，热数据从 Dlo 复制到 Dhi（在每次未命中时）。为了给这些热数据腾出空间，缓存通过 ARC、LRU 或者 LFU 等算法驱逐冷数据。数据移动的粒度通常在 4k block。
-分层类似于缓存，在性能设备中维护热数据。然而，与缓存不同的是，访问 Dlo 上的数据时，不一定被提升为 Dhi。数据可以直接从 Dlo 中提供。数据仅在较长的时间范围（数小时/数天）内定期迁移，并执行长期优化的数据排布。分层通常以较粗的粒度（如整个卷/较大的 extent）。虽然缓存可以对工作负载的变化做出快速的反应，但是分层无法做到。
+使用缓存时，热数据从 $D_{lo}$ 复制到 $D_{hi}$（在每次未命中时）。为了给这些热数据腾出空间，缓存通过 ARC、LRU 或者 LFU 等算法驱逐冷数据。数据移动的粒度通常在 4k block。
+分层类似于缓存，在性能设备中维护热数据。然而，与缓存不同的是，访问 $D_{lo}$ 上的数据时，不一定被提升为 $D_{hi}$。数据可以直接从 $D_{lo}$ 中提供。数据仅在较长的时间范围（数小时/数天）内定期迁移，并执行长期优化的数据排布。分层通常以较粗的粒度（如整个卷/较大的 extent）。虽然缓存可以对工作负载的变化做出快速的反应，但是分层无法做到。
 为了最大限度提高性能，缓存和分层都努力确保从高性能设备为大多数的访问提供服务。因此，大部分缓存和分层都旨在最大限度的提高性能设备的命中率。
 
 ## 存储硬件演进趋势
@@ -94,7 +101,7 @@ category:
 
 - 有两个设备 $D_{hi}$ 和 $D_{lo}$，分别以 $R_{hi}$ 和 $R_{lo}$ op/s 执行
 - 工作负载具有很低并发性（一次一个请求）或者高并发性（一次很多请求）
-- 只有读（简化分析，不需要考虑 cache replacement 中的 dirty writeback）
+- 只有读（简化分析，不需要考虑 cache replacement 中的 dirty write-back）
 
 ## 建模
 
@@ -180,7 +187,7 @@ $$
 图三，$Ratio=100:50=2:1$，用以模拟现代的存储层次结构。两点发现。
 
 1. Cache 受限于 $D_{hi}$ 的性能，无法实现两种设备的综合性能。
-2. 最大化 $D_{hi}$ 响应的请求数并不总是能提供最佳性能。在大量并发的情况下，当大约三分之二的请求指向 Dhi 时，Split 实现了 Dhi 和 Dlo 的聚合带宽。进一步增加分流率只会降低性能。 因此，在现代层次结构中，关键不是最大化命中率或拆分率，而是找到必须发送到每个设备的正确比例的请求。
+2. 最大化 $D_{hi}$ 响应的请求数并不总是能提供最佳性能。在大量并发的情况下，当大约三分之二的请求指向 $D_{hi}$ 时，Split 实现了 $D_{hi}$ 和 $D_{lo}$ 的聚合带宽。进一步增加分流率只会降低性能。 因此，在现代层次结构中，关键不是最大化命中率或拆分率，而是找到必须发送到每个设备的正确比例的请求。
    图四，对照。
 
 ## 真实世界
@@ -189,7 +196,7 @@ $$
 
 - DRAM + Flash SSD
   现代层次结构：
-- NVM + Optane，Optane DCPM 128GB+Optane 905P SSD
+- NVM + Optane，Optane DCPM 128GB + Optane 905P SSD
 - Optane SSD + Flash SSD
   Bench 工具 HFIO（Hierarchical Flexible I/O Benchmark Suite）：
 - LRU-replacement policy for caching
@@ -205,14 +212,15 @@ $$
 
 1. 并行度
 2. 读写比例
-   [Figure 5](assets/image-20220529163232720.png) 中可以看到，对于 Optane+Flash，读密集型负载的最佳拆分率为 $90\%$，写密集型负载的最佳拆分率是 $60\%$，这是因为 Optane 和 Flash 的写入性能差异小于读取性能差异。NVM+Optane 也存在类似结果。
+   [Figure 5](assets/image-20220529163232720.png) 中可以看到，对于 Optane + Flash，读密集型负载的最佳拆分率为 $90\%$，写密集型负载的最佳拆分率是 $60\%$，这是因为 Optane 和 Flash 的写入性能差异小于读取性能差异。NVM+Optane 也存在类似结果。
 
 ## 总结和启示
 
 - 经典缓存在现代层次结构中不再有效：它没有利用容量层可以提供的相当大的性能。
 - 在高命中率和高速缓存层负载过重的情况下，一些请求可以卸载到容量设备。
-  这种高命中率和高负载在生产缓存系统中很常见。 例如，Twitter 最近的一项研究表明，十个 Twemcache 集群中有八个的未命中率低于 5% [98]。 研究还表明，缓存层经常承受重负载（即，它们是带宽饱和的）[17, 56]。
-  解决方案：
+  这种高命中率和高负载在生产缓存系统中很常见。 例如，Twitter 最近的一项研究表明，十个 Twemcache 集群中有八个的未命中率低于 5% [98]。研究还表明，缓存层经常承受重负载（即，它们是带宽饱和的）[17, 56]。
+
+解决方案：
 - 增加层次结构中缓存设备的数量； 然而，这种方法可能非常昂贵，因为性能设备的成本更高。
 - 将请求卸载到容量层提供了一种更经济的方式来实现显着的改进。 这种卸载方法可以通过优化将请求拆分到每个设备来提供所有设备的总体性能。 为了使 Split 方法运行良好，动态调整拆分速率至关重要，因为在现代层次结构中，最佳速率变化很大，具体取决于写入比率和并发级别等因素。
   Tiering 存在与现代层次结构中的缓存类似的缺点。在这项工作中，我们专注于改进缓存有两个主要原因：
@@ -246,44 +254,53 @@ $$
 ### 架构
 
 ![](/images/orthus/3664a87ecca524d55d7f354e3df6f9d0.png)
+
 相比传统缓存，增加了：Cache controller 和 Cache Scheduler。
+
 两个变量：
 
-- data_admit（da）控制 read miss 的行为
-  da=1，在 D_hi 中通过缓存替换策略分配
-  da=0，read miss 由 D_lo 处理。经典缓存就是 da=1 的情况。
-- load_admit（la）控制 read hit 的行为
-  每次 read hit 时生成一个随机数 $R\in[0,1.0]$，如果 $R\leq la$，请求给 D_hi，否则给 D_lo。传统缓存就是 la=1 的情况，每次请求都先给 D_hi 处理。la=0 时，所有命中的读发送到 D_lo。
-  NHC 对于写入：
-- da 和 la 不控制 write hit/misses
-- Writeback 可能会在 D_hi 上引入脏数据，D_lo 上有旧数据。此时 NHC 不会向 D_lo 发送读。
+- data_admit（$da$）控制 read miss 的行为
+  - $da=1$，在 $D_{hi}$ 中通过缓存替换策略分配
+  - $da=0$，read miss 由 $D_{lo}$ 处理。经典缓存就是 $da=1$ 的情况。
+- load_admit（$la$）控制 read hit 的行为
+  每次 read hit 时生成一个随机数 $R\in[0,1.0]$，如果 $R\leq la$，请求给 $D_{hi}$，否则给 $D_{lo}$。
+  传统缓存就是 $la=1$ 的情况，每次请求都先给 $D_{hi}$ 处理。
+  $la=0$ 时，所有命中的读发送到 $D_{lo}$。
+
+NHC 对于写入：
+- $da$ 和 $la$ 不控制 write hit/misses
+- Write-back 可能会在 $D_{hi}$ 上引入脏数据，$D_{lo}$ 上有旧数据。此时 NHC 不会向 $D_{lo}$ 发送读。
 
 ### Cache Scheduler Algorithm
 
 调度程序有两种状态：
 
-1. 增加在 D_hi 上缓存的数据量，最大化命中率
+1. 增加在 $D_{hi}$ 上缓存的数据量，最大化命中率
 2. 保持缓存中的数据不变，调整发送到每个设备的负载。
 
 ![](/images/orthus/8ee78f0e0b90dae8606780a39a671659.png)
 
-f(x) 是一个函数，返回 la=x 时的性能。如何得到对应的性能？通过设置 la=x 一段时间测量得到性能。
-step 是 load_admit 迭代的 step size
-大循环，每次循环做这些事情：
-提高 hit rate
+$f(x)$ 是一个函数，返回 $la=x$ 时的性能。如何得到对应的性能？通过设置 $la=x$ 一段时间测量，得到性能。
 
-1. da=1，la=1（此时行为类似于传统缓存，每次请求都先给 D_hi 处理）<-----A
+$step$ 是 load_admit 迭代的 step size，目标是提高 hit rate
+
+进入一个循环，每次循环进行：
+
+1. $da=1$，$la=1$（此时行为类似于传统缓存，每次请求都先给 $D_{hi}$ 处理）
 2. 等待缓存命中率稳定（如何判定 stable？）
-3. da=0（请求都通过 D_lo 处理）
-   调整 la
-4. start_hit_rate=当前 hit_rate
+3. $da=0$（请求都通过 $D_{lo}$ 处理）
+   调整 $la$
+4. `start_hit_rate` = 当前 `hit_rate`
 5. 迭代
-   - ratio=1
-   - max_f = 测一下 la=ratio-step 的性能，测一下 la=ratio 的性能，测一下 la=ratio+step 的性能，在这三个性能中取最大值
-   - 如果 ratio-step 性能最好，设置 la=ratio-step
-   - 如果 ratio+step 性能最好，设置 la=ratio+step
-   - 如果 ratio 性能最好，设置 la=ratio。如果 la==1，则从 A 开始重新迭代
-   - 如果当前的 hit rate 比一开始记录的 start_hit_rate 更低，就从 A 开始重开
+   - $ratio=1$
+   - $max_f$ = 取下列最大值
+     - $la=ratio-step$ 的性能
+     - $la=ratio$ 的性能
+     - $la=ratio+step$ 的性能
+   - 如果 $ratio-step$ 性能最好，设置 $la=ratio-step$
+   - 如果 $ratio+step$ 性能最好，设置 $la=ratio+step$
+   - 如果 $ratio$ 性能最好，设置 $la=ratio$。如果 $la=1$，则从 1. 开始重新迭代
+   - 如果当前的 hit rate 比一开始记录的 `start_hit_rate` 更低，就从 1. 开始重开
 
 ### 实现
 
@@ -293,7 +310,10 @@ step 是 load_admit 迭代的 step size
 
 # 评估
 
-with 95% hit ratio and Load-2.0, NHC obtains improvements of 21%, 32%, 54% for DRAM+NVM, NVM+Optane, and Optane+Flash, respectively. Such im- provements are marginally reduced with an 80% hit ratio.
+> With 95% hit ratio and Load-2.0 NHC obtains
+> improvements of 21%, 32% 54% for DRAM+NVM, NVM+Optane, and Optane+Flash, respectively.
+> Such improvements are marginally reduced with an 80% hit ratio.
+
 第三，在这些层次结构中，Optane+Flash 与 Orthus-CAS 的改进最大，因为 Optane 和 Flash 之间的性能差异最小，其次是 NVM+Optane 和 DRAM+NVM。 我们使用 FlashSim 的结果显示了从业者如何预测在其目标层次结构上使用 NHC 的改进。
 最后，我们的测量表明 Orthus-CAS 适应复杂的设备特性。 在 80% 的命中率下，经典缓存在任何实际层次结构上都无法达到 1.0 的标准化吞吐量，因为缓存未命中会向缓存设备引入额外的写入。 NHC 处理这种复杂性。
 
@@ -309,4 +329,6 @@ with 95% hit ratio and Load-2.0, NHC obtains improvements of 21%, 32%, 54% for D
 
 # 引用
 
-[高质量存储论文（一）](https://zhuanlan.zhihu.com/p/473438804)
+- [高质量存储论文（一）](https://zhuanlan.zhihu.com/p/473438804)
+
+[twemcache]: https://github.com/twitter/twemcache
