@@ -6,8 +6,6 @@ category:
 
 # Optimizing Caching on Modern Storage Devices with Orthus
 
-[高质量存储论文（一）](https://zhuanlan.zhihu.com/p/473438804)
-
 # 概述
 
 本文介绍了非层次缓存（NHC，non-hierarchical caching），现代存储层次结构中的一种新式缓存方法。与传统缓存相比，NHC 通过将过载重定向到层次结构中较低的设备（如果这么做有好处）来提高性能。NHC 动态调整分配和访问策略，以最大限度提高性能（如高吞吐，较低的 99% 延迟）。我们在 Orthus-CAS（块层 cache 内核模块，基于 OpenCAS）和 Orthus-KV（用户态 kv 缓存层，基于 Wisckey）中实现了 NHC。我们通过深入的实证研究展示了 NHC 的性能：在一系列实际的工作负载下，Orthus-CAS 和 Orthus-KV 在各种现代层次结构上提供显著的更好性能（高达两倍）。
@@ -308,3 +306,7 @@ with 95% hit ratio and Load-2.0, NHC obtains improvements of 21%, 32%, 54% for D
 # 结论
 
 在本文中，我们展示了新兴存储设备如何对现代层次结构中的缓存产生重大影响。我们引入了非分层缓存，这是一种优化的新方法，可从现代设备中提取峰值性能。 NHC 基于一种新颖的缓存调度算法，该算法考虑工作负载和设备特性来做出分配和访问决策。通过实验，我们展示了 NHC 在各种设备、缓存配置和工作负载上的优势。我们相信 NHC 可以作为管理存储层次结构的更好基础。
+
+# 引用
+
+[高质量存储论文（一）](https://zhuanlan.zhihu.com/p/473438804)
