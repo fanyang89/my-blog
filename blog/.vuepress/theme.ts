@@ -15,7 +15,7 @@ export default hopeTheme({
 
   // github repo
   repo: "fanyang89/my-blog",
-  docsDir: "src",
+  docsDir: "blog",
 
   navbar,
   sidebar,
