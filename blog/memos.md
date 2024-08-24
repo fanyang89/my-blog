@@ -8,6 +8,15 @@ category:
 
 # 碎碎念
 
+## 如何打印 Java GC log
+
+```bash
+java -jar ./gclog-1.0-SNAPSHOT.jar \
+-XX:+UseGCLogFileRotation -XX:NumberOfGCLogFiles=5 -XX:GCLogFileSize=10K \
+-XX:+PrintGCDetails -XX:+PrintGCDateStamps -Xloggc:/tmp/gc-%t.log \
+-XX:+UseG1GC -XX:MaxGCPauseMillis=200
+```
+
 ## 顺序一致性 vs 线性一致性
 
 Zab 保证的是顺序一致性语义，Raft 保证的则是线性一致性语义。尽管他们都可以算强一致性，但顺序一致性并无时间维度的约束，所以可能并不满足现实世界的时序。也就是说，在现实世界中，顺序一致性是可能返回旧数据的。
