@@ -8,6 +8,90 @@ category:
 
 # 碎碎念
 
+## `git` 查询 commit 包含指定关键字
+
+```bash
+git log -S '<your-query-keyword>' --format='%h %s' --source --all
+```
+
+## `kopia` 迁移快照
+
+```bash
+kopia snapshot migrate --source-config ./repository.config --all
+```
+
+## `kopia` 配置文件位置
+
+By default, the configuration file is located in your home directory under:
+- `%APPDATA%\kopia\repository.config` on Windows
+- `$HOME/Library/Application Support/kopia/repository.config` on macOS
+- `$HOME/.config/kopia/repository.config` on Linux
+
+## `Meilisearch` 支持 large payload
+
+```bash
+# cat meilisearch.conf
+MEILI_ENV=development
+MEILI_HTTP_ADDR=0.0.0.0:7700
+MEILI_NO_ANALYTICS=no
+MEILI_HTTP_PAYLOAD_SIZE_LIMIT=1Gb
+```
+
+## 使用 `nftables` 模拟丢包
+
+```bash
+# drop packet where dport == 3888
+sudo nft create table ip filter
+sudo nft add chain ip filter input { type filter hook input priority 0 \; }
+sudo nft add rule ip filter input tcp dport 3888 counter drop
+
+# restore
+sudo nft list chain ip filter input
+sudo nft delete rule ip filter input handle n
+```
+
+## 运行 `node-exporter`
+
+```yaml
+# docker-compose.yaml
+version: '3.8'
+services:
+  node_exporter:
+    image: quay.io/prometheus/node-exporter:latest
+    container_name: node-exporter
+    command:
+      - '--path.rootfs=/host'
+    network_mode: host
+    pid: host
+    restart: unless-stopped
+    volumes:
+      - '/:/host:ro,rslave'
+```
+
+## 配置 npm registry
+
+```bash
+npm set registry https://registry.npmmirror.com # 注册模块镜像
+npm set disturl https://npmmirror.com/mirrors/node # node-gyp 编译依赖的 node 源码镜像
+
+# optional
+npm set sass_binary_site https://registry.npmmirror.com/mirrors/node-sass # node-sass 二进制包镜像
+npm set electron_mirror https://registry.npmmirror.com/mirrors/electron/ # electron 二进制包镜像
+npm set puppeteer_download_host https://registry.npmmirror.com/mirrors # puppeteer 二进制包镜像
+npm set chromedriver_cdnurl https://registry.npmmirror.com/mirrors/chromedriver # chromedriver 二进制包镜像
+npm set operadriver_cdnurl https://registry.npmmirror.com/mirrors/operadriver # operadriver 二进制包镜像
+npm set phantomjs_cdnurl https://registry.npmmirror.com/mirrors/phantomjs # phantomjs 二进制包镜像
+npm set selenium_cdnurl https://registry.npmmirror.com/mirrors/selenium # selenium 二进制包镜像
+npm set node_inspector_cdnurl https://registry.npmmirror.com/mirrors/node-inspector # node-inspector 二进制包镜像
+npm set sentrycli_cdnurl https://registry.npmmirror.com/mirrors/sentry-cli # sentry-cli
+```
+
+## 二分查找 MTU
+
+```bash
+ping -M do -s 1472 -c 1 <ip>
+```
+
 ## 如何打印 Java GC log
 
 ```bash
