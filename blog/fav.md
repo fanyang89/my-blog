@@ -41,6 +41,7 @@ category:
 ## Zig
 
 - [What is the status of async in Zig?](https://github.com/ziglang/zig/wiki/FAQ#what-is-the-status-of-async-in-zig)
+- [Learning Zig 中文翻译](https://ziglang.cc/learn/)
 
 ## DNS
 
