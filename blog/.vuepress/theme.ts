@@ -3,7 +3,7 @@ import { hopeTheme } from "vuepress-theme-hope";
 import navbar from "./navbar.js";
 import sidebar from "./sidebar.js";
 
-const hostname = "https://fanyang.vercel.app";
+const hostname = "https://fuis.me";
 
 export default hopeTheme(
   {
