@@ -11,15 +11,32 @@ category:
 ## 命令行工具
 
 - [anyquery](https://anyquery.dev)
+- [terminaltrove - 搜索命令行工具](https://terminaltrove.com)
+
+## Linux
+
+- [Linux 内核基础设施 `static key`](https://linux.laoqinren.net/kernel/static_key/)
 
 ## Rust
 
 - [I sped up serde_json strings by 20%](https://purplesyringa.moe/blog/i-sped-up-serde-json-strings-by-20-percent/)
+
 - [Writing a JVM in Rust](https://andreabergia.Com/series/writing-a-jvm-in-rust/)
+
+- [So You Want to Build a Language VM - Part 01 - Overview and a Simple VM](https://blog.subnetzero.io/post/building-language-vm-part-01/)
+
+- [bit_gossip](https://github.com/PoOnesNerfect/bit_gossip)
+
+  Pathfinding library for calculating all node pairs' shortest paths in an unweighted undirected graph
+
+## Go
+
+- [技术内幕: 构建 Go 语言的动态插桩 Agent](https://jiekun.dev/posts/dynamic_instrumentation_agent/)
 
 ## io_uring
 
 - [使用 io_uring 进行 NVMe 命令的异步透传](https://jianyue.tech/posts/io_uring-passthrough/)
+- [Rust - Using io_uring through your own bindings](https://www.thespatula.io/rust/rust_io_uring_bindings/)
 
 ## Zig
 
@@ -46,3 +63,8 @@ category:
 - [llvm-mca - LLVM Machine Code Analyzer](https://llvm.org/docs/CommandGuide/llvm-mca.html)
 - [uiCA - The uops.info Code Analyzer](https://uica.uops.info/)
 - [Top-down Microarchitecture Analysis Method](https://www.intel.com/content/www/us/en/docs/vtune-profiler/cookbook/2023-0/top-down-microarchitecture-analysis-method.html)
+
+## 共识
+
+- [How Pipelining consensus writes speeds up distributed SQL transactions](https://www.cockroachlabs.com/blog/transaction-pipelining/)
+- [Riemann](https://riemann.io/) aggregates events from your servers and applications with a powerful stream processing language

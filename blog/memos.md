@@ -15,3 +15,9 @@ category:
 然而客户端设置的 HTTP 请求超时时间其实只有 15s：这其中还包括外网数据传输的时间。
 
 于是问题来了：每一个服务端处理耗时超过 15s 的请求，nginx 由于还没达到 60s 的超时阈值不会判定 504 ，而客户端则会由于超过本地的 15s 超时时间直接断开连接，nginx 于是就会记录为 499。
+
+## 移除所有的 `ZooKeeperServer not running` 日志
+
+```bash
+fd 'zookeeper.log.*' -x sd '[^\n]*ZooKeeperServer not running\n' '' {}
+```
