@@ -1,9 +1,12 @@
 {
-    "cSpell.words": [
-        "Gbps",
-        "Optane",
-        "Orthus",
-        "polarfs",
-        "RDMA"
-    ]
+  "cSpell.words": [
+    "Gbps",
+    "Optane",
+    "Orthus",
+    "polarfs",
+    "RDMA"
+  ],
+  "editor.wordWrap": "wordWrapColumn",
+  "editor.wrappingIndent": "same",
+  "editor.wordWrapColumn": 80
 }
