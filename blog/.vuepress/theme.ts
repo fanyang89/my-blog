@@ -47,6 +47,7 @@ export default hopeTheme({
   plugins: {
     blog: true,
     searchPro: true,
+    sitemap: true,
 
     comment: {
       provider: "Giscus",
