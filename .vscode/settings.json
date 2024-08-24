@@ -4,7 +4,9 @@
     "Optane",
     "Orthus",
     "polarfs",
-    "RDMA"
+    "RDMA",
+    "vercel",
+    "vuepress"
   ],
   "editor.wordWrap": "wordWrapColumn",
   "editor.wrappingIndent": "same",
