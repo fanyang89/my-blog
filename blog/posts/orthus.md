@@ -92,6 +92,7 @@ NHC 动态调整分配和访问策略，以最大限度提高性能（如高吞�
 - 高并发写：由于 NVM 并发写入的低性能，在 NVM/Optane 中，比率从低并发的好得多变成高并发时的差得多
 
 总结：
+
 - 与传统的层次结构不同，新的存储层次结构可能不是层次结构，相邻层的（NVM/Optane）的性能可能相似
 - 新设备的性能取决于不同的工作负载和并发级别。
 
@@ -123,6 +124,7 @@ T_{\text {cache }, 1}=H \cdot T_{\text {hit }}+(1-H) \cdot T_{\text {miss }}
 $$
 
 $T_{hit}$ 是 fast device 速率的倒数
+
 $$
 T_{hit}=\frac{1}{R_{h i}}
 $$
@@ -212,13 +214,13 @@ $$
   ![](/images/orthus/7e020732eda16324d7717d469ec76cf4.png)
   上图中，第二行和第三行低并发时，$D_{hi}$ 没有被充分利用，因此提高命中率/拆分率可以提高性能。
   高并发时，最大化命中率不会得到峰值性能。这些情况下，容量设备提供了可观的性能，因此在最佳拆分率的情况下，Split 提供的性能比 Cache 更好。
-  ![](/images/orthus/d9eb4dc8760dc99a8a44ca15fa044f73.png)
+  ![Figure 5](/images/orthus/d9eb4dc8760dc99a8a44ca15fa044f73.png)
 
 实验揭示了模型没有的复杂性，最佳拆分率取决于几个因素：
 
 1. 并行度
 2. 读写比例
-   [Figure 5](assets/image-20220529163232720.png) 中可以看到，对于 Optane + Flash，读密集型负载的最佳拆分率为 $90\%$，写密集型负载的最佳拆分率是 $60\%$，这是因为 Optane 和 Flash 的写入性能差异小于读取性能差异。NVM+Optane 也存在类似结果。
+   Figure 5 中可以看到，对于 Optane + Flash，读密集型负载的最佳拆分率为 $90\%$，写密集型负载的最佳拆分率是 $60\%$，这是因为 Optane 和 Flash 的写入性能差异小于读取性能差异。NVM+Optane 也存在类似结果。
 
 ### 总结和启示
 
@@ -227,6 +229,7 @@ $$
   这种高命中率和高负载在生产缓存系统中很常见。 例如 Twitter 最近的一项研究表明，十个 Twemcache 集群中有八个的未命中率低于 5% [98]。研究还表明，缓存层经常承受重负载（即，它们是带宽饱和的）[17, 56]。
 
 解决方案：
+
 - 增加层次结构中缓存设备的数量； 然而，这种方法可能非常昂贵，因为性能设备的成本更高。
 - 将请求卸载到容量层提供了一种更经济的方式来实现显着的改进。 这种卸载方法可以通过优化将请求拆分到每个设备来提供所有设备的总体性能。 为了使 Split 方法运行良好，动态调整拆分速率至关重要，因为在现代层次结构中，最佳速率变化很大，具体取决于写入比率和并发级别等因素。
   Tiering 存在与现代层次结构中的缓存类似的缺点。在这项工作中，我们专注于改进缓存有两个主要原因：
@@ -268,12 +271,13 @@ $$
 - data_admit（$da$）控制 read miss 的行为
   - $da=1$，在 $D_{hi}$ 中通过缓存替换策略分配
   - $da=0$，read miss 由 $D_{lo}$ 处理。经典缓存就是 $da=1$ 的情况。
-- load_admit（$la$）控制 read hit 的行为
-  每次 read hit 时生成一个随机数 $R\in[0,1.0]$，如果 $R\leq la$，请求给 $D_{hi}$，否则给 $D_{lo}$。
+- load*admit（$la$）控制 read hit 的行为
+  每次 read hit 时生成一个随机数 $R\in[0,1.0]$，如果 $R\leq la$，请求给 $D*{hi}$，否则给 $D_{lo}$。
   传统缓存就是 $la=1$ 的情况，每次请求都先给 $D_{hi}$ 处理。
   $la=0$ 时，所有命中的读发送到 $D_{lo}$。
 
 NHC 对于写入：
+
 - $da$ 和 $la$ 不控制 write hit/misses
 - Write-back 可能会在 $D_{hi}$ 上引入脏数据，$D_{lo}$ 上有旧数据。此时 NHC 不会向 $D_{lo}$ 发送读。
 
@@ -343,5 +347,4 @@ Hit ratio 为 80% 的情况下，改进幅度略有降低。
 
 - [高质量存储论文（一）](https://zhuanlan.zhihu.com/p/473438804)
 
-[twemcache]: https://github.com/twitter/twemcache	"Twemcache is the Twitter Memcached"
-
+[twemcache]: https://github.com/twitter/twemcache "Twemcache is the Twitter Memcached"
