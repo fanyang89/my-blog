@@ -39,9 +39,8 @@ export default hopeTheme({
 
   // disable by default
   // https://theme-hope.vuejs.press/zh/guide/blog/intro.html#%E9%99%90%E5%88%B6
-  hotReload: true,
+  hotReload: false,
 
-  // 在这里配置主题提供的插件
   plugins: {
     blog: true,
 
