@@ -3,12 +3,14 @@ import { hopeTheme } from "vuepress-theme-hope";
 import navbar from "./navbar.js";
 import sidebar from "./sidebar.js";
 
+const hostname = "https://fanyang.vercel.app";
+
 export default hopeTheme({
-  hostname: "https://fanyang.vercel.app",
+  hostname: hostname,
 
   author: {
     name: "fanyang",
-    url: "https://fanyang.vercel.app",
+    url: hostname,
   },
 
   iconAssets: "fontawesome-with-brands",
@@ -95,6 +97,12 @@ export default hopeTheme({
       // echarts: true,
       // 在启用之前安装 flowchart.ts
       // flowchart: true,
+    },
+
+    feed: {
+      atom: true,
+      rss: true,
+      json: true,
     },
   },
 });
