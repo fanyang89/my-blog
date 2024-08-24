@@ -7,6 +7,11 @@ export default navbar([
     link: "/",
   },
   {
+    text: "时间线",
+    icon: "timeline",
+    link: "/timeline/",
+  },
+  {
     text: "文章",
     icon: "paper-plane",
     link: "/posts/",
