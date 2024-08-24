@@ -4,7 +4,7 @@ article: false
 timeline: false
 ---
 
-# 自托管在线服务
+# 自托管服务
 
 - [Meilisearch management UI][meilisearch-ui]
 
