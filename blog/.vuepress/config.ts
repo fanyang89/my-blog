@@ -6,6 +6,6 @@ export default defineUserConfig({
   base: "/",
   lang: "zh-CN",
   title: "fanyang",
-  description: "Less is more",
+  description: "Focus on consensus, metadata service",
   theme,
 });

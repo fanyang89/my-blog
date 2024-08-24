@@ -5,6 +5,7 @@ import sidebar from "./sidebar.js";
 
 export default hopeTheme({
   hostname: "https://fanyang.vercel.app",
+
   author: {
     name: "fanyang",
     url: "https://fanyang.vercel.app",
@@ -23,7 +24,7 @@ export default hopeTheme({
   displayFooter: true,
 
   blog: {
-    description: "全干工程师，主业耍杂技，副业分布式系统",
+    description: "全干工程师，副业分布式系统",
     intro: "/intro.html",
     medias: {
       Email: "mailto:fanyang@smartx.com",
