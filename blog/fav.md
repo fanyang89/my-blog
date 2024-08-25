@@ -54,8 +54,9 @@ category:
 
 ## 网络
 
-- [linux 系统 UDP 丢包问题分析思路](https://cizixs.com/2018/01/13/linux-udp-packet-drop-debug/)
-- [字节跳动开源Linux内核网络抓包工具netcap](https://mp.weixin.qq.com/s/8ucAgPzNBwUNrTc2r1o9qg)
+- [Linux 系统 UDP 丢包问题分析思路](https://cizixs.com/2018/01/13/linux-udp-packet-drop-debug/)
+- [字节跳动开源 Linux 内核网络抓包工具 netcap](https://mp.weixin.qq.com/s/8ucAgPzNBwUNrTc2r1o9qg)
+- [Linux 内存管理中锁使用分析及典型优化案例总结](https://mp.weixin.qq.com/s/yLM5FlYxT06axDoyTeECKg)
 
 ## 体系结构
 
