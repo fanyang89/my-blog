@@ -12,6 +12,7 @@ category:
 
 - [anyquery](https://anyquery.dev)
 - [terminaltrove - 搜索命令行工具](https://terminaltrove.com)
+- [some one-liners to extract urls, email address, and a dictionary from a text file](https://gist.github.com/ericleasemorgan/1a7722b21128d96a28762191690848bd)
 
 ## Linux
 
