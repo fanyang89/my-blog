@@ -71,3 +71,7 @@ category:
 
 - [How Pipelining consensus writes speeds up distributed SQL transactions](https://www.cockroachlabs.com/blog/transaction-pipelining/)
 - [Riemann](https://riemann.io/) aggregates events from your servers and applications with a powerful stream processing language
+
+## 搜索引擎
+
+- [Meilisearch is too slow](https://blog.kerollmops.com/meilisearch-is-too-slow)
