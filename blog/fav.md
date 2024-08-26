@@ -34,6 +34,17 @@ category:
 
 - [技术内幕: 构建 Go 语言的动态插桩 Agent](https://jiekun.dev/posts/dynamic_instrumentation_agent/)
 
+## C++
+
+- [concurrencpp](https://github.com/David-Haim/concurrencpp)
+- [folly](https://github.com/facebook/folly)
+- [seastar](https://seastar.io/)
+- [concurrencpp](https://github.com/David-Haim/concurrencpp)
+- [folly coroutine](https://github.com/facebook/folly/blob/main/folly/experimental/coro/README.md)
+- [async_simple](https://github.com/alibaba/async_simple)
+- [fast io](https://github.com/cppfastio/fast_io)
+- [Is anyone using coroutines seriously?](https://www.reddit.com/r/cpp/comments/18b8zpy/is_anyone_using_coroutines_seriously/)
+
 ## io_uring
 
 - [使用 io_uring 进行 NVMe 命令的异步透传](https://jianyue.tech/posts/io_uring-passthrough/)
