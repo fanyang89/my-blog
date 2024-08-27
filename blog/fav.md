@@ -82,6 +82,7 @@ category:
 
 - [How Pipelining consensus writes speeds up distributed SQL transactions](https://www.cockroachlabs.com/blog/transaction-pipelining/)
 - [Riemann](https://riemann.io/) aggregates events from your servers and applications with a powerful stream processing language
+- [Leader Election With S3 Conditional Writes](https://www.morling.dev/blog/leader-election-with-s3-conditional-writes/)
 
 ## 搜索引擎
 
