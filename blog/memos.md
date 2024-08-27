@@ -8,6 +8,24 @@ category:
 
 # 碎碎念
 
+## `git-lfs` 使用
+
+Install `git-lfs`:
+
+```bash
+git lfs install  # per-use install
+```
+
+Commit large file:
+
+```bash
+git lfs track "*.iso"
+git add .gitattributes
+git add file.iso
+git commit -m "Add disk image"
+git push
+```
+
 ## `git` 查询 commit 包含指定关键字
 
 ```bash
