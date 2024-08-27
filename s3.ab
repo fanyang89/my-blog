@@ -1,0 +1,17 @@
+import { exit, split, lines, trim, words } from "std"
+
+main(args) {
+  let public_dir = "./blog/.vuepress/public"
+
+  let link_str = $ rg -NI '!\[.*\]\((.+)\)' -r '\$1' $?
+  loop link in lines(link_str) {
+    let link = trim(link)
+    let image_base_dir = $ dirname {link} $?
+    let image_ext = $ echo {link} | awk -F. '\{print \$NF}' $?
+    let image_path = "{public_dir}/{link}"
+    let hash = words($ sha1sum {image_path} $?)
+    let hash_name = "{hash[0]}.{image_ext}"
+
+    echo "{link} -> {hash_name}"
+  }
+}
