@@ -8,6 +8,11 @@ category:
 
 # 碎碎念
 
+## Raft multi-DC
+
+- [Arbiter (tie-breaker) DC](https://github.com/scylladb/scylladb/issues/15360)
+- [add support for zero-token nodes](https://github.com/scylladb/scylladb/pull/19684)
+
 ## `git-lfs` 使用
 
 Install `git-lfs`:
