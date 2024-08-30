@@ -8,11 +8,8 @@ isOriginal: true
 - [folly](https://github.com/facebook/folly)
 - [seastar](https://seastar.io/)
 - [concurrencpp](https://github.com/David-Haim/concurrencpp)
-- [folly coroutine](https://github.com/facebook/folly/blob/main/folly/experimental/coro/README.md)
 - [async_simple](https://github.com/alibaba/async_simple)
 - [fast io](https://github.com/cppfastio/fast_io)
-
-
 
 ## 讨论
 

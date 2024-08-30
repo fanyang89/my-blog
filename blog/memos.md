@@ -8,6 +8,30 @@ category:
 
 # 碎碎念
 
+## 修复 `xfs.h` error: arithmetic on a pointer to void
+
+```bash
+In file included from ../third_party/seastar/src/core/reactor.cc:86:
+In file included from /usr/include/xfs/xfs.h:46:
+/usr/include/xfs/xfs_fs.h:909:28: error: arithmetic on a pointer to void
+  909 |         void *next = ((void *)gpr + gpr->gpr_reclen);
+      |                       ~~~~~~~~~~~ ^
+/usr/include/xfs/xfs_fs.h:915:9: error: cannot initialize return object of type 'struct xfs_getparents_rec *' with an rvalue of type 'void *'
+  915 |         return next;
+      |                ^~~~
+2 errors generated.
+```
+
+修复：
+
+```c
+void *next = ((char *)gpr + gpr->gpr_reclen);
+```
+
+```c
+return (struct xfs_getparents_rec *)next;
+```
+
 ## Raft multi-DC
 
 - [Arbiter (tie-breaker) DC](https://github.com/scylladb/scylladb/issues/15360)
