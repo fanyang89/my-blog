@@ -20,6 +20,8 @@ category:
 
 ## Rust
 
+- [Rust-Golang FFI 框架设计与实现](https://www.ihcblog.com/rust2go/)
+
 - [I sped up serde_json strings by 20%](https://purplesyringa.moe/blog/i-sped-up-serde-json-strings-by-20-percent/)
 
 - [Writing a JVM in Rust](https://andreabergia.Com/series/writing-a-jvm-in-rust/)
