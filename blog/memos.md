@@ -8,6 +8,16 @@ category:
 
 # 碎碎念
 
+## Perf-based stall detector creation failed
+
+```
+Perf-based stall detector creation failed (EACCESS), try setting /proc/sys/kernel/perf_event_paranoid to 1 or less to enable kernel backtraces: falling back to posix timer.
+```
+
+```bash
+sudo sh -c 'echo 1 > /proc/sys/kernel/perf_event_paranoid'
+```
+
 ## 修复 `xfs.h` error: arithmetic on a pointer to void
 
 ```bash

@@ -89,3 +89,8 @@ category:
 ## 搜索引擎
 
 - [Meilisearch is too slow](https://blog.kerollmops.com/meilisearch-is-too-slow)
+
+## CI
+
+- [Buildkite](https://buildkite.com)
+
