@@ -8,6 +8,12 @@ category:
 
 # 碎碎念
 
+## SQL Server page size
+
+[Pages and extents architecture guide](https://learn.microsoft.com/en-us/sql/relational-databases/pages-and-extents-architecture-guide?view=sql-server-ver16)
+
+> In a regular book, all content is written on pages. Similar to a book, SQL Server writes all data rows on pages, and all data pages are the same size: 8 KB. In a book, most pages contain the data - the main content of the book - and some pages contain metadata about the content (for example, the table of contents and index). Again, SQL Server is no different: most pages contain actual rows of data that were stored by users; these are called *data pages* and *text/image pages* (for special cases). The *index pages* contain index references about where the data is. Finally, there are *system pages* that store various metadata about the organization of the data.
+
 ## Perf-based stall detector creation failed
 
 ```

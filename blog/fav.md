@@ -11,8 +11,14 @@ category:
 ## 命令行工具
 
 - [anyquery](https://anyquery.dev)
+
 - [terminaltrove - 搜索命令行工具](https://terminaltrove.com)
+
 - [some one-liners to extract urls, email address, and a dictionary from a text file](https://gist.github.com/ericleasemorgan/1a7722b21128d96a28762191690848bd)
+
+- [chezmoi](https://www.chezmoi.io/)
+
+  Manage your dotfiles across multiple diverse machines, securely.
 
 ## Linux
 
@@ -31,6 +37,7 @@ category:
 - [bit_gossip](https://github.com/PoOnesNerfect/bit_gossip)
 
   Pathfinding library for calculating all node pairs' shortest paths in an unweighted undirected graph
+
 
 ## Go
 
@@ -83,8 +90,17 @@ category:
 ## 共识
 
 - [How Pipelining consensus writes speeds up distributed SQL transactions](https://www.cockroachlabs.com/blog/transaction-pipelining/)
+
 - [Riemann](https://riemann.io/) aggregates events from your servers and applications with a powerful stream processing language
+
 - [Leader Election With S3 Conditional Writes](https://www.morling.dev/blog/leader-election-with-s3-conditional-writes/)
+
+- [mwhittaker/quoracle](https://github.com/mwhittaker/quoracle)
+
+  A Swiss Army knife for read-write quorum systems
+
+- [TiDB 在 Raft 成员变更上踩的坑](https://blog.openacid.com/distributed/raft-bug/)
+
 
 ## 搜索引擎
 
